@@ -1,5 +1,5 @@
 <?php
-    class SendInfo extends CI_Controller 
+    class Video extends CI_Controller 
     {
         public function __construct()
         {
@@ -16,7 +16,7 @@
             $this->load->database();
             
             //load Model
-            $this->load->model('SendInfo_Model');
+            $this->load->model('Video_Model');
         }
         
         public function getinfo()
@@ -32,7 +32,7 @@
 
                 //check if casenumber tally with branch
                 $data = array();
-                $data=$this->SendInfo_Model->checkCaseBranch($c,$b);
+                $data=$this->Video_Model->checkCaseBranch($c,$b);
 
                 if(count($data) == 0)
                 {
@@ -41,7 +41,7 @@
                 else
                 {
                     //echo "Match found.";
-                    redirect("/SendInfo/addvideo/$b/$c", 'refresh');
+                    redirect("/Video/addvideo/$b/$c", 'refresh');
                 }
 
             }
