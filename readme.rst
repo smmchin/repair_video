@@ -14,6 +14,6 @@ To upload video
 https://repair.projects-xyz.com/api/Video/upload
 
 Post Param Keys:
-branch (branch id)
-case (case number)
-file
+| branch (branch id)
+| case (case number)
+| file
