@@ -8,6 +8,12 @@
 
             return $query->result();
         }
+
+        function addVideo($case,$video)
+        {
+            $sql="insert into afvideo (case_id, video_url) values ('$case','$video')";
+            $query=$this->db->query($sql);
+        }
     }
 
 ?>

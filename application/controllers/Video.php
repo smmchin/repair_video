@@ -11,19 +11,23 @@
 
             $this->load->library('session');
 
-
             //load database libray manually
             $this->load->database();
             
             //load Model
             $this->load->model('Video_Model');
         }
+
+        public function index(){
+
+            $this->load->view('chooseoptions'); 
+
+        }
         
         public function getinfo()
         {
             //load form
-            $this->load->view('getinfoform');        
-
+            $this->load->view('getinfoform'); 
             if($this->input->post('submit'))
             {
                 $c=$this->input->post('casenumber');
@@ -36,7 +40,7 @@
 
                 if(count($data) == 0)
                 {
-                    echo "Case number and branch code does not tally.";
+                    echo "<br><h1>Case number and branch code does not tally.</h1></br>";
                 }
                 else
                 {
@@ -47,14 +51,46 @@
             }
         }
 
+        public function retrievevideo(){
+            //load form
+            $this->load->view('retrievevideo');
 
-        public function getvideo(){
-           
-            $result = file_get_contents(base_url().'api/Video/1/get');
+            if($this->input->post('submit'))
+            {
+                $v=$this->input->post('videonumber');
 
-            echo $result;
+                //retrieve via API
+                $json=file_get_contents(base_url()."api/Video/$v/get");
+
+                if(!empty($json)){
+                    $r=json_decode($json, true);
+                    //var_dump($r["video_url"]);
+                    $data['video_url'] = base_url().$r["video_url"];
+                    $this->load->view('getvideo', $data);
+    
+                }else{
+                    echo "<br><h1> Video Not Found. Try again.</h1><br>";
+                }  
+            }
 
         }
+
+
+        /*public function getvideo(){
+           
+            $json=file_get_contents(base_url().'api/Video/6/get');
+
+            if(!empty($json)){
+                $r=json_decode($json, true);
+                //var_dump($r["video_url"]);
+                $data['video_url'] = base_url().$r["video_url"];
+                $this->load->view('getvideo', $data);
+
+            }else{
+                echo "Video Not Found.";
+            }            
+
+        }*/
 
         public function addvideo($b, $c){
 
@@ -69,23 +105,24 @@
                     $date = date("ymd");
                     $configVideo['upload_path'] = './video/'.$b.'/';
                     $configVideo['max_size'] = '10240';
-                    $configVideo['allowed_types'] = '*';
+                    $configVideo['allowed_types'] = 'avi|mp4';
                     $configVideo['overwrite'] = FALSE;
                     $configVideo['remove_spaces'] = TRUE;
                     $video_name = $date.$_FILES['video']['name'];
                     $configVideo['file_name'] = $video_name;
         
                     $this->load->library('upload', $configVideo);
-                    $this->upload->initialize($configVideo);   
-                    
-                    //TODO: Add video to DB. Insert path. 
-                    
+                    $this->upload->initialize($configVideo); 
     
                     if (!$this->upload->do_upload('video')) {
                         echo $this->upload->display_errors();
                     } else {
                         $videoDetails = $this->upload->data();
-                        echo "Successfully Uploaded";
+                        //TODO: Add video to DB. Insert path. 
+                        $file_location = 'video/'.$b.'/'.$video_name;
+                        $this->Video_Model->addVideo($c,$file_location);
+                        //echo "Successfully Uploaded";
+                        redirect("/Video", 'refresh');
                     }
                    
                 }

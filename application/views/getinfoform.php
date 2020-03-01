@@ -23,6 +23,12 @@
                 <td colspan="2" align="center"><input type="submit" name="submit" value="Submit Data"/></td>
             </tr>
         </table>
-	</form>
+    </form>
+    <br><br>
+    <i>
+        Note:
+        <br>Available Branches: 1, 2, 3, 4, 5, 6
+        <br>Available Cases: CASE001, CASE002
+    </i>
 </body>
 </html>

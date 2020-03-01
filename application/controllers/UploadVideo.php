@@ -40,7 +40,8 @@
                         echo $this->upload->display_errors();
                     } else {
                         $videoDetails = $this->upload->data();
-                        echo "Successfully Uploaded";
+                        //echo "Successfully Uploaded";
+                        redirect("/Video", 'refresh');
                     }
                    
                 }
