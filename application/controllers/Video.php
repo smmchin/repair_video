@@ -45,7 +45,7 @@
                 else
                 {
                     //echo "Match found.";
-                    redirect("/Video/addvideo/$b/$c", 'refresh');
+                    redirect("/Video/addvideowithapi/$b/$c", 'refresh');
                 }
 
             }
@@ -91,6 +91,45 @@
             }            
 
         }*/
+
+
+        public function addvideowithapi($b, $c){
+
+            $this->load->view('addvideo');
+
+            if($this->input->post('submit'))
+            {
+                if (isset($_FILES['video']['name']) && $_FILES['video']['name'] != '') {
+
+                    $ufile = $this->input->post('video');
+
+                    $filePath = $_FILES['video']['tmp_name'];
+                    $type=$_FILES['video']['type'];
+                    $fileName = $_FILES['video']['name'];  
+
+                    $data = array('video' => curl_file_create($filePath, $type, $fileName));
+
+                    $curlFile = curl_file_create($filePath, $type, $fileName);
+
+                    $data =  array('case'=> $c, 'branch'=> $b, 'file' => $curlFile);
+
+                    $ch = curl_init();                    
+                    curl_setopt($ch, CURLOPT_URL, "https://repair.projects-xyz.com/api/Video/upload");
+                    //curl_setopt($ch, CURLOPT_HTTPHEADER,array('Content-Type: multipart/form-data'));
+                    curl_setopt($ch, CURLOPT_POST, 1);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    $response = curl_exec($ch);
+                    curl_close($ch);   
+                    
+                    if (strpos($response, 'error') !== true) {
+                        redirect("/Video", 'refresh');
+                    }
+
+                }
+            }
+
+        }
 
         public function addvideo($b, $c){
 
